@@ -16,10 +16,14 @@ func LoadSeeds(path string) ([]*graph.WebNode, error) {
 	if err != nil {
 		return nil, err
 	}
+	initSeeds(seeds)
+
+	return seeds, nil
+}
+
+func initSeeds(seeds []*graph.WebNode) {
 	for _, seed := range seeds {
 		seed.Children = make([]*graph.WebNode, 0)
 		seed.Edges = make(map[string]int)
 	}
-
-	return seeds, nil
 }
