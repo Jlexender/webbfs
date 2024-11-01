@@ -2,21 +2,41 @@ package main
 
 import (
 	"fmt"
-	"regexp"
-	"urlCrawl/internal/crawler"
-	"urlCrawl/internal/graph"
+	"webbfs/internal/config"
+	"webbfs/internal/crawler"
+	"webbfs/internal/crawler/json"
+	"webbfs/internal/graph"
+	"webbfs/internal/net"
 )
 
 func main() {
-	depth := 10
+	cfg, err := config.LoadConfig("config/config.yaml")
+	if err != nil {
+		panic(err)
+	}
 
-	G := graph.NewGraph()
-	start := graph.NewNode("https://www.instagram.com", depth)
-	regex := regexp.MustCompile(`https?://([a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+)`)
+	seeds, err := json.LoadSeeds("data/seeds.json")
+	if err != nil {
+		panic(err)
+	}
 
-	G.AddNode(start)
-	crawler.Search(start, G, regex, crawler.WebSearch)
+	net.Init(cfg.NetTimeoutSeconds)
 
+	newCrawler := crawler.NewCrawler(seeds)
+	err = newCrawler.Start(cfg.SearchRegexp)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	printGraph(newCrawler.Graph)
+	err = json.Export(newCrawler.Graph, "data/output.json")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func printGraph(G *graph.Graph) {
+	fmt.Printf("Total nodes: %d\n", len(G.Nodes))
 	for _, node := range G.Nodes {
 		fmt.Printf("%s -> ", node.Url)
 		for _, child := range node.Children {

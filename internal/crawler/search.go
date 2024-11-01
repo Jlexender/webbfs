@@ -1,16 +1,15 @@
 package crawler
 
 import (
-	"log"
 	"regexp"
-	"urlCrawl/internal/graph"
-	"urlCrawl/internal/util"
+	"webbfs/internal/graph"
+	"webbfs/internal/util"
 )
 
 // Search function based on the BFS algorithm. /**
-func Search(start *graph.Node, G *graph.Graph, re *regexp.Regexp,
-	action func(*graph.Node, *graph.Graph, *util.PriorityQueue[*graph.Node], *regexp.Regexp) error) error {
-	queue := util.NewPriorityQueue[*graph.Node]()
+func Search(start *graph.WebNode, G *graph.Graph, re *regexp.Regexp,
+	action func(*graph.WebNode, *graph.Graph, *util.PriorityQueue[*graph.WebNode], *regexp.Regexp)) {
+	queue := util.NewPriorityQueue[*graph.WebNode]()
 	visited := make(map[string]int)
 
 	queue.Push(start)
@@ -20,12 +19,7 @@ func Search(start *graph.Node, G *graph.Graph, re *regexp.Regexp,
 
 		node := *queue.Pop()
 		if node.Depth > 0 {
-			err := action(node, G, queue, re)
-			if err != nil {
-				return err
-			}
+			action(node, G, queue, re)
 		}
 	}
-	log.Println("Search completed")
-	return nil
 }
