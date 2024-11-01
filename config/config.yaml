@@ -1,2 +1,2 @@
-net-timeout-seconds: 3
+timeout: 3
 search-regexp: "https?://([a-zA-Z0-9-]+\\.[a-zA-Z0-9.-]+)"

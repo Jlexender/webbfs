@@ -5,8 +5,8 @@ import (
 )
 
 type Config struct {
-	NetTimeoutSeconds float32 `yaml:"net-timeout-seconds" default:"3"`
-	SearchRegexp      string  `yaml:"search-regexp"`
+	Timeout      float32 `yaml:"timeout"`
+	SearchRegexp string  `yaml:"search-regexp"`
 }
 
 func LoadConfig(path string) (*Config, error) {

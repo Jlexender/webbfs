@@ -7,8 +7,9 @@ import (
 	"webbfs/internal/util"
 )
 
-func WebSearch(node *graph.WebNode, G *graph.Graph, queue *util.PriorityQueue[*graph.WebNode], re *regexp.Regexp) {
-	body, _ := net.GetResponseBody(node.Url)
+func WebSearch(node *graph.WebNode, G *graph.Graph, queue *util.PriorityQueue[*graph.WebNode],
+	re *regexp.Regexp, client *net.Client) {
+	body, _ := client.GetResponseBody(node.Url)
 
 	links := re.FindAllString(string(body), -1)
 	for _, link := range links {

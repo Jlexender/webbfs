@@ -3,7 +3,7 @@ package graph
 type WebNode struct {
 	Url      string         `json:"url"`
 	Depth    int            `json:"depth"`
-	Children []*WebNode     `json:"children"`
+	Children []*WebNode     `json:"-"`
 	Edges    map[string]int `json:"edges"`
 }
 

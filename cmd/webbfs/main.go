@@ -6,7 +6,6 @@ import (
 	"webbfs/internal/crawler"
 	"webbfs/internal/crawler/json"
 	"webbfs/internal/graph"
-	"webbfs/internal/net"
 )
 
 func main() {
@@ -20,16 +19,14 @@ func main() {
 		panic(err)
 	}
 
-	net.Init(cfg.NetTimeoutSeconds)
-
-	newCrawler := crawler.NewCrawler(seeds)
-	err = newCrawler.Start(cfg.SearchRegexp)
+	webCrawler := crawler.NewCrawler(seeds, cfg.Timeout)
+	err = webCrawler.Start(cfg.SearchRegexp)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	printGraph(newCrawler.Graph)
-	err = json.Export(newCrawler.Graph, "data/output.json")
+	printGraph(webCrawler.Graph)
+	err = json.Export(webCrawler.Graph, "data/output.json")
 	if err != nil {
 		panic(err)
 	}
